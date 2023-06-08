@@ -1,0 +1,43 @@
+server:
+  port: 8081
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      trickyService:
+        failureRateThreshold: 40
+        slowCallRateThreshold: 40
+        slowCallDurationThreshold: 1500
+        slidingWindowSize: 5
+        permittedNumberOfCallsInHalfOpenState: 2
+        waitDurationInOpenState: 10000
+  bulkhead:
+    instances:
+      trickyService:
+        maxWaitDuration: 11s
+        maxConcurrentCalls: 2
+#  thread-pool-bulkhead:
+#    instances:
+#      trickyServiceThreadPool:
+#        maxThreadPoolSize: 1
+#        coreThreadPoolSize: 1
+#        queueCapacity: 1
+#
+  retry:
+    instances:
+      trickyService:
+        maxAttempts: 3
+        waitDuration: 3000
+
+  ratelimiter:
+    instances:
+      trickyService:
+        timeoutDuration: 7500
+        limitRefreshPeriod: 5000
+        limitForPeriod: 2
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
